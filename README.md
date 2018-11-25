@@ -51,17 +51,24 @@ pdftotext binary by default
 
 optional arguments:
   -h, --help            show this help message and exit
+  
   -d DOWNLOAD, --download DOWNLOAD
                         URL from where to download PDF file
+                        
   --save-path SAVE_PATH
                         Path where to save downloaded PDF file. Default is
                         /tmp
+                        
   -p PATH, --path PATH  Path from where to read locally saved PDF file
+  
   -s SEARCH, --search SEARCH
                         Search for string in PDF file
+                        
   -r, --raw-text        Enable to output raw text to screen. Default is False
-  --pypdf-converter     Enable to use PyPDF2 instead of system's pdftotext
+  
+  --pypdf-converter     (Optional) Enable to use PyPDF2 instead of system's pdftotext
                         converter. Default is False
-  --image-converter     Enable to use ImageMagic and Tesseract for image to
+                        
+  --image-converter     (Optional) Enable to use ImageMagic and Tesseract for image to
                         text conversion. Default is False
 ```
