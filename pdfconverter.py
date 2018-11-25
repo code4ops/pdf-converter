@@ -145,20 +145,34 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Converts PDF file to text and allows searching for string. Uses pdftotext binary by default',
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-d', '--download', type=str, help='''URL from where to download PDF file'                                        
-                                                           ''', default='')
-    parser.add_argument('--save-path', type=str, help='''Path where to save downloaded PDF file. Default is /tmp
-                                                      ''', default='/tmp')
-    parser.add_argument('-p', '--path', type=str, help='''Path from where to read locally saved PDF file
-                                                       ''', default='')
-    parser.add_argument('-s', '--search', type=str, help='''Search for string in PDF file
-                                                         ''', default='')
-    parser.add_argument('-r', '--raw-text', action='store_true', help='''Enable to output raw text to screen. Default is False
-                                                                      ''', default=False)
-    parser.add_argument('--pypdf-converter', action='store_true', help='''(Optional) Enable to use PyPDF2 instead of system\'s pdftotext converter. Default is False
-                                                                       ''', default=False)
-    parser.add_argument('--image-converter', action='store_true', help='''(optional) Enable to use ImageMagic and Tesseract for image to text conversion. Default is False
-                                                                       ''', default=False)
+    parser.add_argument('-d', '--download',
+                        type=str,
+                        help='''URL from where to download PDF file'                                        
+                             ''', default='')
+    parser.add_argument('--save-path',
+                        type=str,
+                        help='''Path where to save downloaded PDF file. Default is /tmp
+                             ''', default='/tmp')
+    parser.add_argument('-p', '--path',
+                        type=str,
+                        help='''Path from where to read locally saved PDF file
+                             ''', default='')
+    parser.add_argument('-s', '--search',
+                        type=str,
+                        help='''Search for string in PDF file
+                             ''', default='')
+    parser.add_argument('-r', '--raw-text',
+                        action='store_true',
+                        help='''Enable to output raw text to screen. Default is False
+                             ''', default=False)
+    parser.add_argument('--pypdf-converter',
+                        action='store_true',
+                        help='''(Optional) Enable to use PyPDF2 instead of system\'s pdftotext converter. Default is False
+                             ''', default=False)
+    parser.add_argument('--image-converter',
+                        action='store_true',
+                        help='''(optional) Enable to use ImageMagic and Tesseract for image to text conversion. Default is False
+                             ''', default=False)
     args = parser.parse_args()
 
     if args.download:
