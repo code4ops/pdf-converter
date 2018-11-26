@@ -136,8 +136,10 @@ def search(keywords, target, fl):
 
     if match:
         print('\nFound match for {0}\n{1} in {2}'.format(target, match, fl))
+        return fl, True
     else:
         print('\nNo match found for ' + target)
+        return fl, False
 
 
 if __name__ == "__main__":
