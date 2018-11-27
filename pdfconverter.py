@@ -135,7 +135,7 @@ def search(keywords, target, fl):
             match = item
 
     if match:
-        print('\nFound match for {0}\n{1} in {2}'.format(target, match, fl))
+        print('\n\033[1;31mFound match for {0} \033[0;m\n\033[1;43m{1} in {2}\033[0;m'.format(target, match, fl))
         return fl, True
     else:
         print('\nNo match found for ' + target)
