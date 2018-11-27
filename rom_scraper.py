@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import requests
 import time
 from bs4 import BeautifulSoup
 import re
@@ -8,23 +7,6 @@ import os, sys
 
 sys.path.append('../')
 import pdfconverter
-
-
-def request_content(url):
-    req = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
-               'Referer': 'https://www.google.com',
-               'Accept-Encoding': 'gzip,deflate,sdch',
-               'Accept-Language': 'en-US,en;q=0.8,nl;q=0.6'})
-
-    if req.status_code == 200:
-        print(req.status_code, req.reason)
-    else:
-        print('something went wrong\nreturned:',req.status_code, req.reason)
-        exit(-1)
-
-    raw_content = req.content
-
-    return raw_content
 
 
 def extract_urls(raw_content, base):
@@ -88,7 +70,7 @@ if __name__ == "__main__":
 
     target = sys.argv[1]
 
-    content = request_content(full_url)
+    content = pdfconverter.request_content(full_url).content
     urls = extract_urls(content, base_url)
     new_fls = download_pdfs(urls, path)
     if not new_fls:

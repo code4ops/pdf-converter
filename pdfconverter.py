@@ -4,8 +4,7 @@ import re
 import argparse
 import sys, subprocess, os
 import time
-import urllib.request
-import shutil
+import requests
 import PyPDF2
 from nltk import download as nltk_downloader
 from nltk.tokenize import word_tokenize
@@ -29,18 +28,59 @@ def check_python_version(v):
         sys.exit(1)
 
 
+def request_content(url,time_out=60):
+    try:
+        resp = requests.get(url,
+                            timeout=time_out,
+                            headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
+
+        if (100 <= resp.status_code < 600) and (resp.status_code != 200):
+            raise ConnectionError('Error: Bad response code')
+    except ConnectionError as e:
+        print(e)
+        print('Returned:', resp.status_code, resp.reason)
+        print()
+    except Exception as e:
+        print('Error: Something went wrong\n', e)
+        return None
+
+    return resp
+
+
+def convert_bytes(f_size):
+    if f_size is None:
+        print('File size: ', 'Unknown')
+        return None
+    elif f_size < 1024:
+        print('File size: ', int(f_size), 'bytes')
+    elif 1024 <= f_size <= 1048576:
+        size = float(f_size) / 1024
+        print('File size: ', round(size, 2), 'Kilobytes')
+    else:
+        size = float(f_size) / 1048576
+        print('File size: ', round(size, 2), 'Megabytes')
+
+    return f_size
+
+
 def download_file(url, file_name):
     print()
     print(time.strftime("%Y-%m-%d %H:%M:%S"), '|| Starting download of', url)
-    try:
-        with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
-        print('\nCreated',  file_name)
-        print()
+
+    response = request_content(url)
+    if response:
+        if response.headers.get('content-length'):
+            convert_bytes(f_size=int(response.headers.get('content-length')))
+
+        try:
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+        except Exception as error:
+            print('Error: Unable to write a file\n', error)
+            sys.exit(1)
+
+        print('Created: ', file_name)
         print(time.strftime("%Y-%m-%d %H:%M:%S"), '|| Finished downloading', url)
-    except Exception as error:
-        print('Error: Download failed\n', error)
-        exit(1)
 
 
 def os_extract_text(filename):
@@ -77,7 +117,7 @@ def pypdf_extract_text(filename):
         return text
     else:
         print("Empty file or unable to extract text from " + filename)
-        exit(1)
+        sys.exit(1)
 
 
 def image_extract_text(filename):
@@ -189,11 +229,11 @@ if __name__ == "__main__":
     if not args.download and not args.path:
         print("\nError: Pass either download URL or path to locally saved PDF file\n")
         parser.print_help()
-        exit(1)
+        sys.exit(1)
 
     if args.pypdf_converter and args.image_converter:
         print('\nError: Pick either --pypdf-converter or --image-converter, not both!\nDon\'t specify either one to use standard pdftotext\n')
-        exit(1)
+        sys.exit(1)
 
     if args.pypdf_converter:
         txt = pypdf_extract_text(file_path)
